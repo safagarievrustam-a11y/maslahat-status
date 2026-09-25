@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Статус сервисов — Maslahat AI</title>
+<meta name="description" content="Работают ли сервисы Maslahat AI: чат, документы, вход по СМС, оплата Payme и Click, сайт и приложение. Доступность за 90 дней и история инцидентов.">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#F1EEE8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#040D27" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="https://maslahat.ai/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="status.css">
+<script>
+/* Тема до первой отрисовки: выбор человека (кнопка) или системная. */
+try { var th = localStorage.getItem('maslahat.status.theme'); if (th) document.documentElement.setAttribute('data-theme', th); } catch (e) {}
+</script>
+<script src="status.js" defer></script>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="logo" href="https://maslahat.ai/"><i class="dot"></i>Maslahat</a>
+    <span class="mono muted top-label" data-t="label">// Статус сервисов</span>
+    <span class="grow"></span>
+    <a class="btn btn-outline" href="https://t.me/maslahat_support_bot">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 4L3 11l6 2 2 6 3-4 5 4z"/><path d="M9 13l8-6"/></svg>
+      <span data-t="support">Поддержка в Telegram</span></a>
+    <button type="button" class="icon-btn" id="theme" aria-label="Сменить тему">
+      <svg class="i-moon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+      <svg class="i-sun" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg>
+    </button>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="summary" id="summary" aria-live="polite">
+    <span class="owl" id="owl" aria-hidden="true"></span>
+    <div class="sum-text">
+      <p class="mono muted" id="updated">…</p>
+      <h1 class="display" id="headline" data-t="loading">Проверяем…</h1>
+      <p class="muted" id="sub"></p>
+    </div>
+    <div class="sum-state"><i class="dot-lg" id="state-dot"></i><span class="mono" id="state-label"></span></div>
+  </section>
+
+  <section class="services">
+    <div class="sec-head">
+      <h2 class="display" data-t="services">Сервисы</h2>
+      <div class="legend mono muted"><i class="d ok"></i><span data-t="ok">Работает</span><i class="d warn"></i><span data-t="warn">Задержки</span><i class="d down"></i><span data-t="down">Сбой</span></div>
+    </div>
+    <div class="list" id="list"></div>
+    <div class="axis mono muted"><span data-t="ago">90 дней назад</span><span data-t="today">Сегодня</span></div>
+  </section>
+
+  <section class="incidents">
+    <h2 class="display" data-t="incidents">История инцидентов</h2>
+    <div id="inc"></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-in"><a class="mono" href="https://maslahat.ai/">maslahat.ai</a><a class="mono" href="https://t.me/maslahat_support_bot" data-t="help">Поддержка</a><span class="grow"></span><span class="mono muted">status.maslahat.ai</span></div>
+</footer>
+</body>
+</html>

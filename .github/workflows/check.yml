@@ -1,0 +1,29 @@
+# .github/workflows/check.yml в публичном репо maslahat-status (см. README.md).
+# Раз в 5 минут проверяет сервисы и коммитит status.json + history.json — Pages отдаёт их странице.
+name: check
+on:
+  schedule:
+    - cron: '*/5 * * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: check
+  cancel-in-progress: false
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python checker.py --out .
+      - name: Commit results
+        run: |
+          git config user.name "maslahat-status"
+          git config user.email "status@maslahat.ai"
+          git add status.json history.json
+          git commit -q -m "check $(date -u +%H:%M)" || exit 0
+          git push -q
