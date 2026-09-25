@@ -22,6 +22,8 @@ from datetime import datetime, timedelta, timezone
 
 DAYS = 90
 SLOW_SEC = 3.0
+# Чужие сервисы (Eskiz, Payme, Click) проверяем из-за границы (GitHub) — дорога туда длиннее.
+SLOW_EXT_SEC = 8.0
 UA = "maslahat-status/1.0 (+https://status.maslahat.ai)"
 
 # id, url, заголовки. Доступен = ответ быстрее 15 с без 5xx (для чужих сервисов 4xx — тоже «жив»).
@@ -53,6 +55,10 @@ def probe(url: str, headers: dict, strict: bool, timeout: float = 15.0) -> tuple
     return (200 <= code < 300 or code == 451) if strict else code < 500, dt
 
 
+def slow_limit(cid: str) -> float:
+    return SLOW_SEC if CHECKS.get(cid, (None, None, True))[2] else SLOW_EXT_SEC
+
+
 def day_status(d: dict) -> str | None:
     if not d or not d.get("n"):
         return None
@@ -72,7 +78,7 @@ def update(history: dict, results: dict, now: datetime) -> dict:
         d = comp.setdefault(day, {"n": 0, "f": 0, "s": 0})
         d["n"] += 1
         d["f"] += 0 if ok else 1
-        d["s"] += 1 if ok and dt > SLOW_SEC else 0
+        d["s"] += 1 if ok and dt > slow_limit(cid) else 0
         for k in [k for k in comp if k < cutoff]:
             del comp[k]
     return history
@@ -88,7 +94,7 @@ def build_status(history: dict, results: dict, now: datetime) -> dict:
         ok, dt = results.get(cid, (True, 0.0))
         comps.append({
             "id": cid,
-            "status": "down" if not ok else "warn" if dt > SLOW_SEC else "ok",
+            "status": "down" if not ok else "warn" if dt > slow_limit(cid) else "ok",
             "uptime": round(100 * (n - f) / n, 2) if n else None,
             "days": [day_status(comp.get(d)) for d in days],
         })
